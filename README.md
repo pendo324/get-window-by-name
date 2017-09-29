@@ -26,11 +26,11 @@ and use the (only) `getWindowText` function
 `getWindowText([executableName])`:
 - executableName: the name of the executable
 
-- Returns
-    - `Array` of processes that match the argument
-        - process
-        ```
-        processId: Number
-        processName: String
-        processTitle: String
-        ```
+- Returns an `Array` of processes that match the argument
+
+`process` Object structure:
+```
+processId: Number
+processName: String
+processTitle: String
+```
