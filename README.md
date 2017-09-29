@@ -30,7 +30,9 @@ and use the (only) `getWindowText` function
 
 `process` Object structure:
 ```
-processId: Number
-processName: String
-processTitle: String
+{
+    processId: Number,
+    processName: String,
+    processTitle: String
+}
 ```
