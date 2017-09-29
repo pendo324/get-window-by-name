@@ -10,7 +10,7 @@
     "url" : "https://github.com/pendo324/get-window-by-name.git"
   },
   "os": [
-    "win"
+    "win32"
   ],
   "author": "pendo324 <pendo3247@gmail.com>",
   "main": "index.js",
