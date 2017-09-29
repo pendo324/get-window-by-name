@@ -12,6 +12,9 @@ $ npm run build
 
 All subsequent builds only need `npm run build`
 
+## Compatibility
+
+Currently, this only runs on Windows. Linux support is being considered. macOS support will probably never come, since I'm not even sure anything on macOS actually sets a window title (I'll happily add macOS support if someone proves me wrong).
 
 ## Usage
 
@@ -24,7 +27,7 @@ const test = require('./NativeExtension.node');
 and use the (only) `getWindowText` function
 
 `getWindowText([executableName])`:
-- executableName: the name of the executable
+- executableName (optional): the name of the executable that you want the info for. Omitting this argument will return every process
 
 - Returns an `Array` of processes that match the argument
 
@@ -36,3 +39,9 @@ and use the (only) `getWindowText` function
     processTitle: String
 }
 ```
+
+## Todo (pull requests welcome!)
+
+- Add Linux support
+- Fix tests
+- Add automatic build server
