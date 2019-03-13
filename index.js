@@ -1,7 +1,7 @@
 const { platform } = require('os');
 
 module.exports = {
-  getWindowText: () => {}
+  getWindowText: () => []
 };
 
 if (platform() === 'win32') {
