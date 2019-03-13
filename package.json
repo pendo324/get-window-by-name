@@ -1,6 +1,6 @@
 {
   "name": "get-window-by-name",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "Get window info using executable name",
   "keywords": [
     "native",
