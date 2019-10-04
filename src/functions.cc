@@ -91,7 +91,9 @@ processInfo getProcessInfo(DWORD processID, std::string processName) {
 }
 
 NAN_METHOD(getWindowText) {
-	v8::Local<v8::Value> input = v8::String::NewFromUtf8(v8::Isolate::GetCurrent(), "");
+	v8::Local<v8::Value> input;
+	v8::String::NewFromUtf8(v8::Isolate::GetCurrent(), "", v8::NewStringType::kInternalized, 0).ToLocal(&input);
+
 	if (info[0]->IsString()) {
 		input = info[0];
 	}
@@ -113,30 +115,45 @@ NAN_METHOD(getWindowText) {
 
 	v8::Local<v8::Array> arr = Nan::New<v8::Array>();
 
-	v8::String::Utf8Value inputAsUnicode(input->ToString());
+	v8::Local<v8::Context> context = Nan::GetCurrentContext();
 
-	auto inputAsString = std::string(*inputAsUnicode);
+	std::string inputAsString = *Nan::Utf8String(input->ToString(context).ToLocalChecked());
 
 	auto nextElem = 0;
 	for (i = 0; i < cProcesses; i++) {
 		if (aProcesses[i] != 0) {
 			auto pi = getProcessInfo(aProcesses[i], inputAsString);
 			if (pi.processId != -1) {
+				v8::Local<v8::Context> innerContext = Nan::GetCurrentContext();
 				v8::Local<v8::Object> obj = Nan::New<v8::Object>();
 				v8::Isolate* isolate = v8::Isolate::GetCurrent();
 
-				auto processNameProp = v8::String::NewFromUtf8(isolate, "processName");
-				auto processName = v8::String::NewFromUtf8(isolate, pi.processName.c_str());
+				std::string processNamePropStr("processName");
+				v8::Local<v8::String> processNameProp;
+				v8::MaybeLocal<v8::String> processNamePropMaybe = v8::String::NewFromUtf8(isolate, processNamePropStr.c_str(), v8::NewStringType::kInternalized, processNamePropStr.length());
+				processNamePropMaybe.ToLocal(&processNameProp);
 
-				auto processTitleProp = v8::String::NewFromUtf8(isolate, "processTitle");
-				auto processTitle = v8::String::NewFromUtf8(isolate, pi.processTitle.c_str());
+				v8::Local<v8::String> processName;
+				v8::MaybeLocal<v8::String> processNameMaybe = v8::String::NewFromUtf8(isolate, pi.processName.c_str(), v8::NewStringType::kInternalized, pi.processName.length());
+				processNameMaybe.ToLocal(&processName);
 
-				auto processIdProp = v8::String::NewFromUtf8(isolate, "processId");
+				std::string processTitlePropStr("processTitle");
+				v8::Local<v8::String> processTitleProp;
+				v8::MaybeLocal<v8::String> processTitlePropMaybe = v8::String::NewFromUtf8(isolate, processTitlePropStr.c_str(), v8::NewStringType::kInternalized, processTitlePropStr.length());
+				processTitlePropMaybe.ToLocal(&processTitleProp);
+				v8::Local<v8::String> processTitle;
+				v8::MaybeLocal<v8::String> processTitleMaybe = v8::String::NewFromUtf8(isolate, pi.processTitle.c_str(), v8::NewStringType::kInternalized, pi.processTitle.length());
+				processTitleMaybe.ToLocal(&processTitle);
+
+				std::string processIdPropStr("processId");
+				v8::Local<v8::String> processIdProp;
+				v8::MaybeLocal<v8::String> processIdPropMaybe = v8::String::NewFromUtf8(isolate, processIdPropStr.c_str(), v8::NewStringType::kInternalized, processIdPropStr.length());
+				processIdPropMaybe.ToLocal(&processIdProp);
 				auto processId = v8::Integer::New(isolate, pi.processId);
 
-				obj->Set(processNameProp, processName);
-				obj->Set(processTitleProp, processTitle);
-				obj->Set(processIdProp, processId);
+				obj->Set(innerContext, processNameProp, processName);
+				obj->Set(innerContext, processTitleProp, processTitle);
+				obj->Set(innerContext, processIdProp, processId);
 
 				Nan::Set(arr, nextElem, obj);
 				nextElem = nextElem + 1;

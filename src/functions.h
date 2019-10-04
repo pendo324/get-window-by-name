@@ -4,6 +4,7 @@
 #pragma comment(lib, "psapi.lib")
 
 #include <nan.h>
+#include <node.h>
 
 #include <stdio.h>
 #include <tchar.h>
